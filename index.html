@@ -502,7 +502,7 @@
                     <div class="photo" id="photoBox">
                         <img id="modalImg" alt="Memory photo" style="display:none;">
                         <div class="fallback" id="photoFallback">
-                            Add a photo later by placing it in <b>/assets</b> and updating the filename in the code.
+                            Add a photo later by placing it in <b>assets</b> and updating the filename in the code.
                         </div>
                     </div>
                     <div id="modalMessage"></div>
@@ -529,53 +529,53 @@
     const INTRO_SUB = "Tap to begin the journey through our little universe.";
     const FINAL_QUESTION = `Will you be my Valentine, ${PERSON_NAME}?`;
 
-    // Optional audio file path. Put your mp3 in /assets and set filename here.
+    // Optional audio file path. Put your mp3 in assets and set filename here.
     // Example: "assets/music.mp3"
-    const MUSIC_SRC = "/assets/music.mp3"; // leave "" if you don't want music
+    const MUSIC_SRC = "assets/music.mp3"; // leave "" if you don't want music
 
-    // Memories: add photos into /assets and put their filenames below, or leave photo:"" to show fallback.
+    // Memories: add photos into assets and put their filenames below, or leave photo:"" to show fallback.
     const MEMORIES = [
         {
             id: "m1",
             title: "The first time I knew",
             message: "Somehow, even in chaos… you felt like peace. I still remember that moment.",
             icon: "🪐",
-            photo: "/assets/IMG_1927.png"
+            photo: "assets/memory2.png"
         },
         {
             id: "m2",
             title: "Your laugh is my favorite sound",
             message: "If happiness had a soundtrack, it would literally be you laughing.",
             icon: "🌙",
-            photo: "/assets/IMG_0361.PNG"
+            photo: "assets/IMG_0359.png"
         },
         {
             id: "m3",
             title: "Little moments > everything",
             message: "Not the big stuff… it’s the random, normal moments with you that feel magical.",
             icon: "✨",
-            photo: "/assets/memory3.png"
+            photo: "assets/memory3.png"
         },
         {
             id: "m4",
             title: "You make life softer",
             message: "You don’t even try… but you make everything feel lighter and better.",
             icon: "🌸",
-            photo: "/assets/memory4.png"
+            photo: "assets/memory4.png"
         },
         {
             id: "m5",
             title: "I’m grateful for you",
             message: "If I could bottle gratitude, it would still not be enough to describe how I feel about you.",
             icon: "💫",
-            photo: "/assets/3A7041AD-4A64-4896-87FE-DA0BBF0ACBAA.png"
+            photo: "assets/IMG_1927.png"
         },
         {
             id: "mFinal",
             title: "The Final Planet",
             message: "This is the one I’ve been waiting for…",
             icon: "💖",
-            photo: "/aassets/3A7041AD-4A64-4896-87FE-DA0BBF0ACBAA.png"
+            photo: "assets/memory10.png"
         }
     ];
 
@@ -1123,7 +1123,7 @@ to be my Valentine. 💗
 
     musicBtn.addEventListener("click", () => {
         if(!MUSIC_SRC){
-            flashToast("Add a music file in /assets to enable 🎵");
+            flashToast("Add a music file in assets to enable 🎵");
             return;
         }
         setMusic(!musicOn);
