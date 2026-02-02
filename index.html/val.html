@@ -1,0 +1,1153 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Our Universe ✨</title>
+    <style>
+        :root{
+            --bg:#050613;
+            --card: rgba(255,255,255,.08);
+            --card2: rgba(255,255,255,.12);
+            --text: rgba(255,255,255,.92);
+            --muted: rgba(255,255,255,.68);
+            --accent: #ff4fd8;
+            --accent2:#7c5cff;
+            --good:#4dffb0;
+            --shadow: 0 16px 50px rgba(0,0,0,.55);
+            --radius: 18px;
+        }
+
+        *{ box-sizing:border-box; }
+        html,body{ height:100%; margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: var(--bg); color: var(--text); overflow:hidden; }
+
+        /* ===== Starfield Canvas ===== */
+        #starCanvas{
+            position:fixed;
+            inset:0;
+            width:100%;
+            height:100%;
+            z-index:0;
+            background: radial-gradient(1200px 800px at 30% 25%, rgba(124,92,255,.22), transparent 55%),
+            radial-gradient(900px 650px at 75% 60%, rgba(255,79,216,.18), transparent 60%),
+            radial-gradient(800px 600px at 60% 20%, rgba(77,255,176,.10), transparent 55%),
+            linear-gradient(180deg, #020311, #070826);
+        }
+
+        /* ===== App Wrapper ===== */
+        .app{
+            position:relative;
+            z-index:1;
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:18px;
+        }
+
+        .screen{
+            width:min(980px, 100%);
+            height:min(680px, 100%);
+            border-radius: 26px;
+            background: rgba(0,0,0,.22);
+            backdrop-filter: blur(10px);
+            border:1px solid rgba(255,255,255,.10);
+            box-shadow: var(--shadow);
+            overflow:hidden;
+            position:relative;
+        }
+
+        .topbar{
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            padding:14px 16px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            z-index:5;
+        }
+
+        .pill{
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            padding:10px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.10);
+            color: var(--muted);
+            font-size:13px;
+            user-select:none;
+        }
+
+        .pill strong{ color: var(--text); font-weight:650; }
+
+        .btn{
+            cursor:pointer;
+            border:none;
+            color: var(--text);
+            background: rgba(255,255,255,.10);
+            border:1px solid rgba(255,255,255,.14);
+            padding:10px 12px;
+            border-radius: 999px;
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            transition: transform .12s ease, background .12s ease, border-color .12s ease;
+            user-select:none;
+        }
+        .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.22); }
+        .btn:active{ transform: translateY(0px) scale(.98); }
+
+        .btn.primary{
+            background: linear-gradient(135deg, rgba(255,79,216,.35), rgba(124,92,255,.35));
+            border-color: rgba(255,255,255,.18);
+        }
+
+        .content{
+            position:absolute;
+            inset:0;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:28px 18px 18px;
+        }
+
+        /* ===== Transitions ===== */
+        .fadeIn{ animation: fadeIn .6s ease both; }
+        .fadeOut{ animation: fadeOut .35s ease both; }
+        @keyframes fadeIn{ from{ opacity:0; transform: scale(0.98);} to{opacity:1; transform:scale(1);} }
+        @keyframes fadeOut{ from{ opacity:1;} to{ opacity:0; transform: scale(0.98);} }
+
+        /* ===== Intro ===== */
+        .intro{
+            text-align:center;
+            max-width: 720px;
+            padding: 20px;
+        }
+        .headline{
+            font-size: clamp(26px, 4vw, 46px);
+            letter-spacing: .2px;
+            line-height:1.08;
+            margin:0 0 12px;
+            font-weight: 800;
+            text-shadow: 0 10px 45px rgba(0,0,0,.55);
+        }
+        .subtitle{
+            margin:0 auto 18px;
+            color: var(--muted);
+            font-size: clamp(14px, 2vw, 18px);
+            line-height:1.45;
+            max-width: 560px;
+        }
+        .tapHint{
+            margin-top:14px;
+            color: rgba(255,255,255,.75);
+            font-size: 13px;
+            letter-spacing: .3px;
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            opacity:.85;
+            user-select:none;
+        }
+        .pulseDot{
+            width:10px; height:10px;
+            border-radius:50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 0 rgba(255,79,216,.5);
+            animation: pulse 1.4s infinite;
+        }
+        @keyframes pulse{
+            0%{ box-shadow: 0 0 0 0 rgba(255,79,216,.55); }
+            70%{ box-shadow: 0 0 0 14px rgba(255,79,216,0); }
+            100%{ box-shadow: 0 0 0 0 rgba(255,79,216,0); }
+        }
+
+        /* ===== Universe Map ===== */
+        .map{
+            width:100%;
+            height:100%;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .mapTitle{
+            position:absolute;
+            top:64px;
+            left:18px;
+            right:18px;
+            text-align:center;
+            color: rgba(255,255,255,.92);
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing:.3px;
+            opacity:.92;
+            z-index:2;
+            pointer-events:none;
+        }
+
+        .planets{
+            position:absolute;
+            inset:0;
+            display:block;
+        }
+
+        .planet{
+            position:absolute;
+            width: 92px;
+            height: 92px;
+            border-radius: 50%;
+            cursor:pointer;
+            user-select:none;
+            transform: translate(-50%, -50%);
+            border:1px solid rgba(255,255,255,.18);
+            box-shadow: 0 20px 60px rgba(0,0,0,.55);
+            transition: transform .12s ease, filter .12s ease, opacity .12s ease;
+            overflow:hidden;
+        }
+        .planet:hover{ transform: translate(-50%, -50%) scale(1.05); filter: brightness(1.15); }
+        .planet:active{ transform: translate(-50%, -50%) scale(0.98); }
+
+        .planet::before{
+            content:"";
+            position:absolute;
+            inset:-30%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.40), transparent 35%),
+            radial-gradient(circle at 60% 70%, rgba(255,255,255,.20), transparent 42%),
+            linear-gradient(135deg, rgba(255,79,216,.55), rgba(124,92,255,.55));
+            filter: blur(0px);
+            transform: rotate(20deg);
+            opacity:.95;
+        }
+        .planet::after{
+            content:"";
+            position:absolute;
+            inset:0;
+            background: radial-gradient(circle at 60% 20%, rgba(0,0,0,.0), rgba(0,0,0,.35));
+            opacity:.9;
+        }
+
+        .planetLabel{
+            position:absolute;
+            left:50%;
+            bottom:-28px;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: rgba(255,255,255,.78);
+            white-space:nowrap;
+            text-shadow: 0 8px 30px rgba(0,0,0,.6);
+            pointer-events:none;
+        }
+
+        .planet.completed{
+            border-color: rgba(77,255,176,.55);
+            box-shadow: 0 0 0 3px rgba(77,255,176,.18), 0 18px 60px rgba(0,0,0,.6);
+        }
+        .planet.completed .ring{
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .planet.locked{
+            cursor:not-allowed;
+            opacity:.55;
+            filter: grayscale(.25);
+        }
+        .planet.locked:hover{ transform: translate(-50%, -50%) scale(1.00); filter: grayscale(.25); }
+
+        .ring{
+            position:absolute;
+            inset:-16px;
+            border-radius:50%;
+            border: 2px solid rgba(77,255,176,.55);
+            opacity:0;
+            transform: scale(.88);
+            transition: all .2s ease;
+            box-shadow: 0 0 40px rgba(77,255,176,.22);
+            pointer-events:none;
+        }
+
+        .planetIcon{
+            position:absolute;
+            inset:0;
+            display:grid;
+            place-items:center;
+            z-index:2;
+            font-size: 28px;
+            text-shadow: 0 10px 30px rgba(0,0,0,.65);
+            pointer-events:none;
+        }
+
+        /* ===== Modal ===== */
+        .modalOverlay{
+            position:absolute;
+            inset:0;
+            background: rgba(0,0,0,.55);
+            display:none;
+            align-items:center;
+            justify-content:center;
+            padding:18px;
+            z-index:10;
+        }
+        .modalOverlay.show{ display:flex; }
+
+        .modal{
+            width:min(520px, 100%);
+            border-radius: var(--radius);
+            background: rgba(15, 16, 35, .86);
+            border:1px solid rgba(255,255,255,.14);
+            box-shadow: var(--shadow);
+            overflow:hidden;
+            transform: translateY(8px);
+            animation: pop .22s ease both;
+        }
+        @keyframes pop{ from{ opacity:.2; transform: translateY(16px) scale(.98);} to{ opacity:1; transform: translateY(0) scale(1);} }
+
+        .modalHeader{
+            padding:14px 16px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            border-bottom:1px solid rgba(255,255,255,.10);
+            gap:12px;
+        }
+        .modalHeader h3{
+            margin:0;
+            font-size: 16px;
+            letter-spacing:.2px;
+        }
+        .modalClose{
+            border:none;
+            background: rgba(255,255,255,.10);
+            border:1px solid rgba(255,255,255,.14);
+            color: var(--text);
+            width:36px;
+            height:36px;
+            border-radius: 10px;
+            cursor:pointer;
+        }
+
+        .modalBody{
+            padding:16px;
+            color: rgba(255,255,255,.85);
+            line-height:1.5;
+            font-size:14px;
+        }
+
+        .photo{
+            width:100%;
+            height: 240px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.10);
+            overflow:hidden;
+            margin-bottom: 12px;
+            position:relative;
+        }
+        .photo img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            display:block;
+        }
+        .photo .fallback{
+            position:absolute;
+            inset:0;
+            display:grid;
+            place-items:center;
+            color: rgba(255,255,255,.65);
+            font-size: 13px;
+            padding: 12px;
+            text-align:center;
+        }
+
+        .modalFooter{
+            padding:14px 16px 16px;
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+        }
+
+        /* ===== Final Question Screen ===== */
+        .final{
+            text-align:center;
+            max-width: 760px;
+            padding: 24px 18px;
+        }
+        .final h2{
+            margin:0 0 10px;
+            font-size: clamp(24px, 4vw, 44px);
+            font-weight: 900;
+            letter-spacing:.2px;
+            line-height:1.05;
+        }
+        .final p{
+            margin:0 auto 18px;
+            max-width: 560px;
+            color: var(--muted);
+            line-height:1.5;
+            font-size: 15px;
+        }
+
+        .actions{
+            display:flex;
+            gap:12px;
+            justify-content:center;
+            flex-wrap:wrap;
+            margin-top: 10px;
+        }
+
+        .yesBtn{
+            background: linear-gradient(135deg, rgba(77,255,176,.28), rgba(255,79,216,.28));
+            border-color: rgba(255,255,255,.22);
+            padding: 12px 16px;
+            font-weight: 700;
+        }
+        .noBtn{
+            background: rgba(255,255,255,.08);
+            border-color: rgba(255,255,255,.14);
+            padding: 12px 16px;
+            font-weight: 650;
+            position:relative;
+        }
+
+        /* ===== Love Letter ===== */
+        .letter{
+            width:min(740px, 100%);
+            border-radius: 22px;
+            background: rgba(15, 16, 35, .78);
+            border:1px solid rgba(255,255,255,.14);
+            box-shadow: var(--shadow);
+            padding: 18px 18px 16px;
+            margin: 18px auto 0;
+            text-align:left;
+        }
+        .letter h3{
+            margin: 0 0 8px;
+            font-size: 16px;
+            letter-spacing:.2px;
+        }
+        .typewriter{
+            font-size: 14px;
+            color: rgba(255,255,255,.86);
+            line-height:1.55;
+            white-space: pre-wrap;
+            min-height: 90px;
+        }
+
+        /* ===== Hearts burst layer ===== */
+        #fxLayer{
+            position:absolute;
+            inset:0;
+            pointer-events:none;
+            z-index:20;
+            overflow:hidden;
+        }
+        .heart{
+            position:absolute;
+            font-size: 18px;
+            filter: drop-shadow(0 10px 18px rgba(0,0,0,.55));
+            opacity:0;
+            animation: floatUp 1.6s ease forwards;
+        }
+        @keyframes floatUp{
+            0%{ transform: translateY(0) scale(.85); opacity:0; }
+            15%{ opacity:1; }
+            100%{ transform: translateY(-220px) scale(1.15); opacity:0; }
+        }
+
+        /* ===== Mobile fit ===== */
+        @media (max-width: 520px){
+            .planet{ width:78px; height:78px; }
+            .planetLabel{ bottom:-24px; font-size: 11px; }
+            .mapTitle{ top:72px; }
+            .photo{ height: 210px; }
+        }
+    </style>
+</head>
+<body>
+<canvas id="starCanvas"></canvas>
+
+<div class="app">
+    <div class="screen" id="screen">
+        <div class="topbar">
+            <div class="pill" id="progressPill" style="visibility:hidden;">
+                ✨ <strong id="progressText">Memories unlocked: 0/0</strong>
+            </div>
+
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button class="btn" id="musicBtn" aria-label="Toggle music">
+                    🔊 <span id="musicLabel">Music: Off</span>
+                </button>
+                <button class="btn" id="restartBtn" aria-label="Restart">
+                    ↻ Restart
+                </button>
+            </div>
+        </div>
+
+        <div class="content" id="content"></div>
+
+        <!-- Memory Modal -->
+        <div class="modalOverlay" id="modalOverlay" role="dialog" aria-modal="true">
+            <div class="modal">
+                <div class="modalHeader">
+                    <h3 id="modalTitle">Memory</h3>
+                    <button class="modalClose" id="modalClose" aria-label="Close">✕</button>
+                </div>
+                <div class="modalBody">
+                    <div class="photo" id="photoBox">
+                        <img id="modalImg" alt="Memory photo" style="display:none;">
+                        <div class="fallback" id="photoFallback">
+                            Add a photo later by placing it in <b>/assets</b> and updating the filename in the code.
+                        </div>
+                    </div>
+                    <div id="modalMessage"></div>
+                </div>
+                <div class="modalFooter">
+                    <button class="btn primary" id="modalDoneBtn">Done ✨</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FX Layer -->
+        <div id="fxLayer"></div>
+    </div>
+</div>
+
+<audio id="bgm" preload="auto" loop></audio>
+
+<script>
+    /***********************
+     * CONFIG (EDIT THIS)
+     ***********************/
+    const PERSON_NAME = "ANNA NDIAYE"; // change to her name
+    const INTRO_LINE = "In a universe of billions… I found you My Love.";
+    const INTRO_SUB = "Tap to begin the journey through our little universe.";
+    const FINAL_QUESTION = `Will you be my Valentine, ${PERSON_NAME}?`;
+
+    // Optional audio file path. Put your mp3 in /assets and set filename here.
+    // Example: "assets/music.mp3"
+    const MUSIC_SRC = "/assets/music.mp3"; // leave "" if you don't want music
+
+    // Memories: add photos into /assets and put their filenames below, or leave photo:"" to show fallback.
+    const MEMORIES = [
+        {
+            id: "m1",
+            title: "The first time I knew",
+            message: "Somehow, even in chaos… you felt like peace. I still remember that moment.",
+            icon: "🪐",
+            photo: "/assets/IMG_1927.png"
+        },
+        {
+            id: "m2",
+            title: "Your laugh is my favorite sound",
+            message: "If happiness had a soundtrack, it would literally be you laughing.",
+            icon: "🌙",
+            photo: "/assets/IMG_0361.PNG"
+        },
+        {
+            id: "m3",
+            title: "Little moments > everything",
+            message: "Not the big stuff… it’s the random, normal moments with you that feel magical.",
+            icon: "✨",
+            photo: "/assets/memory3.png"
+        },
+        {
+            id: "m4",
+            title: "You make life softer",
+            message: "You don’t even try… but you make everything feel lighter and better.",
+            icon: "🌸",
+            photo: "/assets/memory4.png"
+        },
+        {
+            id: "m5",
+            title: "I’m grateful for you",
+            message: "If I could bottle gratitude, it would still not be enough to describe how I feel about you.",
+            icon: "💫",
+            photo: "/assets/3A7041AD-4A64-4896-87FE-DA0BBF0ACBAA.png"
+        },
+        {
+            id: "mFinal",
+            title: "The Final Planet",
+            message: "This is the one I’ve been waiting for…",
+            icon: "💖",
+            photo: "/aassets/3A7041AD-4A64-4896-87FE-DA0BBF0ACBAA.png"
+        }
+    ];
+
+    // Love letter that shows after YES (typewriter)
+    const LOVE_LETTER = `Hey ${PERSON_NAME},
+
+I just want you to know… you’re one of the best things that ever happened to me.
+You make my days brighter, my mind calmer, and my heart fuller.
+
+So today I’m asking, in the cheesiest and nerdiest way possible…
+to be my Valentine. 💗
+
+— Toluwase`;
+
+    /***********************
+     * STATE
+     ***********************/
+    const content = document.getElementById("content");
+    const progressPill = document.getElementById("progressPill");
+    const progressText = document.getElementById("progressText");
+    const restartBtn = document.getElementById("restartBtn");
+    const musicBtn = document.getElementById("musicBtn");
+    const musicLabel = document.getElementById("musicLabel");
+    const bgm = document.getElementById("bgm");
+    const fxLayer = document.getElementById("fxLayer");
+
+    const modalOverlay = document.getElementById("modalOverlay");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalMessage = document.getElementById("modalMessage");
+    const modalClose = document.getElementById("modalClose");
+    const modalDoneBtn = document.getElementById("modalDoneBtn");
+    const modalImg = document.getElementById("modalImg");
+    const photoFallback = document.getElementById("photoFallback");
+
+    let opened = new Set();
+    const finalId = "mFinal";
+    const normalMemories = MEMORIES.filter(m => m.id !== finalId);
+    const totalNormals = normalMemories.length;
+
+    let musicOn = false;
+
+    /***********************
+     * STARFIELD
+     ***********************/
+    const canvas = document.getElementById("starCanvas");
+    const ctx = canvas.getContext("2d");
+    let stars = [];
+    function resizeCanvas(){
+        canvas.width = window.innerWidth * devicePixelRatio;
+        canvas.height = window.innerHeight * devicePixelRatio;
+        canvas.style.width = window.innerWidth + "px";
+        canvas.style.height = window.innerHeight + "px";
+        ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    }
+    function initStars(){
+        stars = [];
+        const count = Math.floor((window.innerWidth * window.innerHeight) / 9000);
+        for(let i=0;i<count;i++){
+            stars.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                r: Math.random() * 1.6 + 0.2,
+                a: Math.random() * 0.65 + 0.2,
+                s: Math.random() * 0.35 + 0.05
+            });
+        }
+    }
+    function drawStars(){
+        ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+
+        // subtle nebula glow
+        const g = ctx.createRadialGradient(window.innerWidth*0.35, window.innerHeight*0.3, 40, window.innerWidth*0.35, window.innerHeight*0.3, 520);
+        g.addColorStop(0, "rgba(124,92,255,0.14)");
+        g.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g;
+        ctx.fillRect(0,0,window.innerWidth, window.innerHeight);
+
+        for(const st of stars){
+            st.x += st.s;
+            if(st.x > window.innerWidth + 10) st.x = -10;
+
+            // twinkle
+            const tw = (Math.sin(Date.now()/650 + st.y) + 1) / 2;
+            const alpha = st.a * (0.55 + 0.45*tw);
+
+            ctx.beginPath();
+            ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+            ctx.arc(st.x, st.y, st.r, 0, Math.PI*2);
+            ctx.fill();
+        }
+        requestAnimationFrame(drawStars);
+    }
+
+    window.addEventListener("resize", () => {
+        resizeCanvas();
+        initStars();
+    });
+
+    /***********************
+     * UI HELPERS
+     ***********************/
+    function setScreen(node){
+        content.innerHTML = "";
+        content.appendChild(node);
+    }
+
+    function updateProgress(){
+        progressText.textContent = `Memories unlocked: ${opened.size}/${totalNormals}`;
+        progressPill.style.visibility = "visible";
+    }
+
+    function openModal(mem){
+        modalTitle.textContent = mem.title;
+        modalMessage.textContent = mem.message;
+
+        // photo
+        if(mem.photo){
+            modalImg.src = mem.photo;
+            modalImg.style.display = "block";
+            photoFallback.style.display = "none";
+            modalImg.onerror = () => {
+                modalImg.style.display = "none";
+                photoFallback.style.display = "grid";
+            };
+        } else {
+            modalImg.style.display = "none";
+            photoFallback.style.display = "grid";
+        }
+
+        modalOverlay.classList.add("show");
+        modalOverlay.dataset.memId = mem.id;
+    }
+
+    function closeModal(){
+        modalOverlay.classList.remove("show");
+        modalOverlay.dataset.memId = "";
+    }
+
+    function burstHearts(){
+        const hearts = ["💖","💘","💗","💓","💞","💝","✨"];
+        const amount = 65;
+
+        const rect = fxLayer.getBoundingClientRect();
+        for(let i=0;i<amount;i++){
+            const el = document.createElement("div");
+            el.className = "heart";
+            el.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+            const x = Math.random() * rect.width;
+            const y = rect.height - (Math.random()*40 + 10);
+            el.style.left = x + "px";
+            el.style.top = y + "px";
+            el.style.fontSize = (Math.random()*18 + 14) + "px";
+            el.style.animationDuration = (Math.random()*0.8 + 1.2) + "s";
+            el.style.animationDelay = (Math.random()*0.08) + "s";
+            fxLayer.appendChild(el);
+
+            setTimeout(() => el.remove(), 2200);
+        }
+    }
+
+    function typewriter(el, text, speed=18){
+        el.textContent = "";
+        let i = 0;
+        const timer = setInterval(() => {
+            el.textContent += text[i];
+            i++;
+            if(i >= text.length){
+                clearInterval(timer);
+            }
+        }, speed);
+    }
+
+    async function safePlayAudio(){
+        if(!MUSIC_SRC) return false;
+        bgm.src = MUSIC_SRC;
+        bgm.volume = 0.15; // base
+        try{
+            await bgm.play();
+            return true;
+        }catch{
+            return false;
+        }
+    }
+
+    async function setMusic(on){
+        musicOn = on;
+        if(!MUSIC_SRC){
+            musicLabel.textContent = "Music: Off (no file)";
+            return;
+        }
+        if(on){
+            const ok = await safePlayAudio();
+            if(ok){
+                musicLabel.textContent = "Music: On";
+            } else {
+                musicOn = false;
+                musicLabel.textContent = "Music: Off";
+                flashToast("Tap once and try again to enable audio 🎵");
+            }
+        } else {
+            bgm.pause();
+            musicLabel.textContent = "Music: Off";
+        }
+    }
+
+    function swellMusic(){
+        if(!MUSIC_SRC || !musicOn) return;
+        // gentle volume swell
+        let v = bgm.volume;
+        const target = 0.32;
+        const step = 0.01;
+        const t = setInterval(() => {
+            v = Math.min(target, v + step);
+            bgm.volume = v;
+            if(v >= target) clearInterval(t);
+        }, 60);
+    }
+
+    /***********************
+     * SCREENS
+     ***********************/
+    function buildIntro(){
+        progressPill.style.visibility = "hidden";
+
+        const wrap = document.createElement("div");
+        wrap.className = "intro fadeIn";
+        wrap.tabIndex = 0;
+
+        const h = document.createElement("h1");
+        h.className = "headline";
+        h.textContent = "";
+
+        const sub = document.createElement("p");
+        sub.className = "subtitle";
+        sub.textContent = INTRO_SUB;
+
+        const hint = document.createElement("div");
+        hint.className = "tapHint";
+        hint.innerHTML = `<span class="pulseDot"></span> Tap anywhere to begin`;
+
+        wrap.appendChild(h);
+        wrap.appendChild(sub);
+        wrap.appendChild(hint);
+
+        // type intro line
+        const line = INTRO_LINE;
+        let idx = 0;
+        const tw = setInterval(() => {
+            h.textContent += line[idx];
+            idx++;
+            if(idx >= line.length) clearInterval(tw);
+        }, 30);
+
+        const go = () => transitionTo(buildMap());
+        wrap.addEventListener("click", go);
+        wrap.addEventListener("keydown", (e) => {
+            if(e.key === "Enter" || e.key === " ") go();
+        });
+
+        return wrap;
+    }
+
+    function buildMap(){
+        updateProgress();
+
+        const map = document.createElement("div");
+        map.className = "map fadeIn";
+
+        const title = document.createElement("div");
+        title.className = "mapTitle";
+        title.textContent = "Tap each planet to unlock a memory ✨";
+
+        const planetsLayer = document.createElement("div");
+        planetsLayer.className = "planets";
+
+        // Position planets (responsive-ish, % based)
+        // 5 normals + final in center-bottom
+        const layout = [
+            { id:"m1", x:22, y:33 },
+            { id:"m2", x:50, y:26 },
+            { id:"m3", x:78, y:36 },
+            { id:"m4", x:34, y:62 },
+            { id:"m5", x:66, y:62 },
+            { id:"mFinal", x:50, y:78 }
+        ];
+
+        const memById = Object.fromEntries(MEMORIES.map(m => [m.id, m]));
+
+        layout.forEach(pos => {
+            const mem = memById[pos.id];
+            const isFinal = mem.id === finalId;
+
+            const p = document.createElement("div");
+            p.className = "planet";
+            p.style.left = pos.x + "%";
+            p.style.top = pos.y + "%";
+            p.dataset.id = mem.id;
+
+            // locked final until all opened
+            if(isFinal && opened.size < totalNormals){
+                p.classList.add("locked");
+            }
+
+            const ring = document.createElement("div");
+            ring.className = "ring";
+            p.appendChild(ring);
+
+            const icon = document.createElement("div");
+            icon.className = "planetIcon";
+            icon.textContent = mem.icon || "✨";
+            p.appendChild(icon);
+
+            const label = document.createElement("div");
+            label.className = "planetLabel";
+            label.textContent = isFinal ? "Final Planet" : `Memory ${layout.findIndex(a=>a.id===mem.id)+1}`;
+            p.appendChild(label);
+
+            if(opened.has(mem.id)){
+                p.classList.add("completed");
+            }
+
+            p.addEventListener("click", () => {
+                if(isFinal){
+                    if(opened.size < totalNormals){
+                        // tiny feedback
+                        flashToast("Unlock all memories first ✨");
+                        return;
+                    }
+                    transitionTo(buildFinal());
+                    return;
+                }
+                openModal(mem);
+            });
+
+            // float animation via JS (subtle drift)
+            const drift = {
+                baseX: pos.x,
+                baseY: pos.y,
+                phase: Math.random() * Math.PI * 2,
+                speed: (Math.random() * 0.0015) + 0.0012,
+                amp: (Math.random() * 1.2) + 0.8
+            };
+            p._drift = drift;
+
+            planetsLayer.appendChild(p);
+        });
+
+        map.appendChild(title);
+        map.appendChild(planetsLayer);
+
+        // animate drift
+        let raf;
+        const tick = () => {
+            const now = Date.now();
+            const els = planetsLayer.querySelectorAll(".planet");
+            els.forEach(el => {
+                const d = el._drift;
+                if(!d) return;
+                const dy = Math.sin(now * d.speed + d.phase) * d.amp;
+                const dx = Math.cos(now * (d.speed*0.9) + d.phase) * (d.amp*0.55);
+                el.style.transform = `translate(-50%, -50%) translate(${dx}px, ${dy}px)`;
+            });
+            raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+
+        // cleanup when leaving screen
+        map._cleanup = () => cancelAnimationFrame(raf);
+
+        return map;
+    }
+
+    function buildFinal(){
+        progressPill.style.visibility = "hidden";
+
+        const wrap = document.createElement("div");
+        wrap.className = "final fadeIn";
+
+        const h2 = document.createElement("h2");
+        h2.textContent = FINAL_QUESTION;
+
+        const p = document.createElement("p");
+        p.textContent = "This is the final planet… the one I saved for last 💫";
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const yes = document.createElement("button");
+        yes.className = "btn yesBtn";
+        yes.textContent = "Yes 💖";
+
+        const no = document.createElement("button");
+        no.className = "btn noBtn";
+        no.textContent = "No 🙃";
+
+        // Move "No" button away on hover/tap
+        const moveNo = () => {
+            const rect = wrap.getBoundingClientRect();
+            const nx = (Math.random() * (rect.width - 120)) - (rect.width/2 - 60);
+            const ny = (Math.random() * (rect.height - 160)) - (rect.height/2 - 80);
+            no.style.transform = `translate(${nx}px, ${ny}px)`;
+        };
+        no.addEventListener("mouseenter", moveNo);
+        no.addEventListener("click", moveNo);
+
+        yes.addEventListener("click", () => {
+            burstHearts();
+            swellMusic();
+            transitionTo(buildYes());
+        });
+
+        actions.appendChild(yes);
+        actions.appendChild(no);
+
+        wrap.appendChild(h2);
+        wrap.appendChild(p);
+        wrap.appendChild(actions);
+
+        return wrap;
+    }
+
+    function buildYes(){
+        const wrap = document.createElement("div");
+        wrap.className = "final fadeIn";
+
+        const h2 = document.createElement("h2");
+        h2.textContent = "YAYYYYY 💖💖💖";
+
+        const p = document.createElement("p");
+        p.textContent = "You just made my whole universe brighter.";
+
+        const letter = document.createElement("div");
+        letter.className = "letter";
+
+        const title = document.createElement("h3");
+        title.textContent = "A letter for you…";
+
+        const tw = document.createElement("div");
+        tw.className = "typewriter";
+
+        letter.appendChild(title);
+        letter.appendChild(tw);
+
+        wrap.appendChild(h2);
+        wrap.appendChild(p);
+        wrap.appendChild(letter);
+
+        // typewriter after a tiny delay
+        setTimeout(() => typewriter(tw, LOVE_LETTER, 18), 250);
+
+        // extra heart burst
+        setTimeout(burstHearts, 300);
+        setTimeout(burstHearts, 900);
+
+        return wrap;
+    }
+
+    /***********************
+     * TOAST (tiny feedback)
+     ***********************/
+    let toastTimer = null;
+    function flashToast(text){
+        let el = document.getElementById("toast");
+        if(!el){
+            el = document.createElement("div");
+            el.id = "toast";
+            el.style.position = "absolute";
+            el.style.left = "50%";
+            el.style.bottom = "18px";
+            el.style.transform = "translateX(-50%)";
+            el.style.padding = "10px 12px";
+            el.style.borderRadius = "999px";
+            el.style.background = "rgba(255,255,255,.10)";
+            el.style.border = "1px solid rgba(255,255,255,.14)";
+            el.style.color = "rgba(255,255,255,.86)";
+            el.style.fontSize = "13px";
+            el.style.boxShadow = "0 18px 50px rgba(0,0,0,.55)";
+            el.style.zIndex = "30";
+            el.style.opacity = "0";
+            el.style.transition = "opacity .15s ease, transform .15s ease";
+            document.getElementById("screen").appendChild(el);
+        }
+        el.textContent = text;
+        el.style.opacity = "1";
+        el.style.transform = "translateX(-50%) translateY(-4px)";
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            el.style.opacity = "0";
+            el.style.transform = "translateX(-50%) translateY(6px)";
+        }, 1200);
+    }
+
+    /***********************
+     * TRANSITION HANDLER
+     ***********************/
+    function transitionTo(nextNode){
+        const current = content.firstChild;
+        if(current && current._cleanup) current._cleanup();
+
+        if(current){
+            current.classList.remove("fadeIn");
+            current.classList.add("fadeOut");
+            setTimeout(() => {
+                setScreen(nextNode);
+            }, 240);
+        } else {
+            setScreen(nextNode);
+        }
+    }
+
+    /***********************
+     * EVENTS
+     ***********************/
+    modalClose.addEventListener("click", closeModal);
+    modalOverlay.addEventListener("click", (e) => {
+        if(e.target === modalOverlay) closeModal();
+    });
+
+    modalDoneBtn.addEventListener("click", () => {
+        const id = modalOverlay.dataset.memId;
+        if(id && id !== finalId){
+            opened.add(id);
+        }
+        closeModal();
+
+        // Re-render map to reflect completion + unlock final if ready
+        const current = content.firstChild;
+        if(current && current.classList.contains("map")){
+            transitionTo(buildMap());
+        }
+
+        updateProgress();
+        if(opened.size === totalNormals){
+            // nice feedback when final unlocks
+            setTimeout(() => flashToast("Final planet unlocked 💖"), 300);
+        }
+    });
+
+    restartBtn.addEventListener("click", () => {
+        opened = new Set();
+        closeModal();
+        setMusic(false);
+        transitionTo(buildIntro());
+    });
+
+    musicBtn.addEventListener("click", () => {
+        if(!MUSIC_SRC){
+            flashToast("Add a music file in /assets to enable 🎵");
+            return;
+        }
+        setMusic(!musicOn);
+    });
+
+    /***********************
+     * INIT
+     ***********************/
+    function init(){
+        resizeCanvas();
+        initStars();
+        drawStars();
+
+        if(MUSIC_SRC){
+            bgm.setAttribute("playsinline", "");
+            bgm.src = MUSIC_SRC;
+            bgm.load();
+        }
+        setMusic(false);
+
+        setScreen(buildIntro());
+    }
+
+    init();
+</script>
+</body>
+</html>
